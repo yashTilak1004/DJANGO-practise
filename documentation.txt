@@ -1,0 +1,87 @@
+cd Home
+"Run the project":py manage.py runserver
+"can use 'startapp name'" to get new application(A group of files that are used to dispaly a webpage or return data)
+-> py manage.py startapp members
+Similar to flask,views is where http requests and responses are made.  To execute a view,use URLS. }For a given path in URL,a method from view is called.
+URL file is in the main project folder,since it takes care of paths.
+The urls.py in members method is called in the home urls.py page.
+Views go through http requests,templates folder contains .html files which makes the html structure needed for a webpage.
+Return the html file for url using views(django.template -> loader()    }object =  loader.get_template(),object.render())
+----------------------------------------------------------------------------------------------------------------------------------------
+->Go to settings.py to make sure html pages can be rendered in django. Specificall inside the install apps,add your createapp thing.
+---------------------------------------------------------------------------------------------------------------------------------------------
+->Use models which is similar to objects in oops or tables in database,used to handle dynamic data. It provides a structure to he data.
+->This model which contains the structure of a database is built using : py manage.py makemigrations migrate
+->Now in the migrations file of members app,a python ini file is made based on the models.py instructions.
+->now use py manage.py migrate to create and execute sql statements.
+->To add data into the table:
+from members.models import members
+members.objects.all()
+#add operation
+member = members(f_name='LHS',l_name='RHS')
+member.save()
+In [17]: member1 = members(f_name='LHS1',l_name='RHS1')
+In [18]: member1.save()
+In [19]: member2 = members(f_name='LHS2',l_name='RHS2')
+In [20]: member2.save()
+In [21]: member3 = members(f_name='LHS3',l_name='RHS3')
+In [22]: member3.save()
+members.objects.all().values()
+#update operation
+x = members.objects.all()[3]
+x.col_name = ''
+x.save()
+#Delete operation
+In [50]: x.delete()
+Out[50]: (1, {'members.members': 1})
+#Update models.py
+Add new columns with required validation or fields
+run py manage.py makemigrations members
+use null=True in validation,so as to ensure even if their empty they don't clash with preexisting values.
+py manage.py migrate
+->now look for or apply data
+-----------------------------------------------------------------------------------------------------------------------
+Now display the data built through the models structure
+for loop in html:
+{% for x in mymembers %}
+    <li>{{ x.f_name }} {{ x.l_name }}</li>
+{% endfor %}
+------------------------------------------------------------------------------------------------------------------------
+similar to components in react js,this code can be used for other places
+Master template:
+for some html page,use master template in this way:
+{% extends = 'master.html' %}
+blocks in master can be used here(like containers wrapping elements in accordance to some style)
+{% block name %}
+{% endblock %}
+-------------------------------------------------------------------------------------------------------------------------
+A main page(A default page) -> use main.html  .In the specific app's url.py}mention the path is "",but everywhere else in href mention it as "/"
+For page not found(Show with the help of 404 status code) -> build a 404.html in templates folder}looks at it by default,no need to mention any url or view
+->in settings:
+DEBUG = False
+ALLOWED_HOSTS = ['*']
+-----------------------------------------------------------------------------------------------------------------------------
+Admin(Control users):
+Run py manage.py createsuperuser to create an admin for project
+To ensure some model is visible to admin,we specifically mention it in the admin.py file.
+------------------------------------------------------------------------------------------------------------------------------
+->variable in view to html , make a context dictionary/object with variable in "variable name":data.then in render send this context followed by request,call
+it in html as {{variable name}}
+(or) inside the html create a variable as {% with variable_name = "smthg" %} proceeded by {{variable_name}}
+->{% if condition  %}           {% else %}                  {% endif %}
+->{% for x in smthg %} {% endfor %}
+->commenting-> {% comment %} data {% endcomment %}
+->Use include to use a block of content from other html,like the master html page. {% include 'master.html' %}
+->{% include some_variable='value'}=>can be used in html as {{some_variable}}
+-------------------------------------------------------------------------------------------------------------------------------
+QuerySet
+->Collection of data from dataset in django.
+->a list of objects,to get all rows model_name.objects.all()
+->model_name.objects.all.values() gives the properties or columns data as output.
+->model_name.objects.value_list('col') } gives data of that particular column for all rows.
+->To get specific rows:model_name.objects.filter(col='Emil').values()
+can place a comma in filter section to satisfy 2 or more conditions : (col1 = condition,col2 = condition)  [AND]
+
+model_name.objects.filter(col='Emil').values() | model_name.objects.filter(col2='smthg').values()  [OR]
+Member.objects.filter(Q(firstname='Emil') | Q(firstname='Tobias')).values()
+--------------------------------------------------------------------------------------------------------------------------------
